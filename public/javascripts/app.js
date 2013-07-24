@@ -47,6 +47,7 @@ var ClientView = Backbone.View.extend({
   
   initialize : function() {
     this.listenTo(this.collection, 'reset', this.onReset);
+    this.onReset();
   },
 
   events: {
@@ -82,16 +83,31 @@ var ClientView = Backbone.View.extend({
   },
 
   clientBoxClick: function(ev) {
-    var url = '/clients/' + $(ev.target).attr('data-href');
+    var $target = $(ev.target);
+    var $clientBox = $target.hasClass('client-box') ? $target : $target.parents('.client-box');
+    var url = '/clients/' + $clientBox.attr('data-href');
     console.log('url: ' + url);
     window.location.href = url;
   }
 
 });
 
+var NavView = Backbone.View.extend({
 
+  el: $('#mainNav')[0],
 
+  events: {
+    'click a': 'navClick'
+  },
 
+  navClick: function(ev) {
+    this.$('ul.nav a').removeClass('active');
+    $(ev.target).addClass('active');
+  }
+
+});
+
+var navView = new NavView();
 
 
 var clients = new Clients();
@@ -111,16 +127,24 @@ clients.fetch({ reset: true });
 var Workspace = Backbone.Router.extend({
 
   routes: {
+    '': 'index',
     "about":                 "about",    // #help
+    'help': 'help',
     "search/:query":        "search",  // #search/kiwis
     "search/:query/p:page": "search"   // #search/kiwis/p7
+  },
+
+  index: function() {
+    clientsView.initialize();
   },
 
   about: function() {
     $('#app').html(_.template( $('#about-template').html()));
   },
 
-
+  help: function() {
+    $('#app').html(_.template( $('#help-template').html()));
+  },
 });
 
 var router = new Workspace();
