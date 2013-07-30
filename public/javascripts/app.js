@@ -139,11 +139,17 @@ var Workspace = Backbone.Router.extend({
   },
 
   about: function() {
-    $('#app').html(_.template( $('#about-template').html()));
+    $('#app').fadeOut(100, function() {
+      $('#app').html(_.template( $('#about-template').html()));
+      $('#app').fadeIn(100);
+    });
   },
 
   help: function() {
-    $('#app').html(_.template( $('#help-template').html()));
+    $('#app').fadeOut(100, function() {
+      $('#app').html(_.template( $('#help-template').html()));
+      $('#app').fadeIn(100);
+    });
   },
 });
 
